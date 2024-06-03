@@ -5,6 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url('./images/musicalbackground.png'); /* Update the path as needed */
+  background-size: cover; /* Stretch and crop the background image to cover the entire background */
+  /*overflow: hidden;*/
 }
 
 code {

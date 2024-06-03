@@ -1,98 +1,92 @@
 import React, { useState, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
 import musicService from '../services/musicService';
+import '../css/musicGroups.css';
 
 const apiBaseUrl = 'https://appmusicwebapinet8.azurewebsites.net/api';
 const service = new musicService(apiBaseUrl);
 
-export function ListAlbums() {
-    const [albums, setAlbums] = useState([]); // State for album data
-    const [error, setError] = useState(null); // State for error messages
+export function ListMusicGroups() {
+    const [musicGroups, setMusicGroups] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [pageNr, setPageNr] = useState(0);
+    const [error, setError] = useState(null);
+    const [totalItems, setTotalItems] = useState(0);
+
+    const itemsPerPage = 10;
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                // Fetch albums data from the API
-                const albumsData = await service.readAlbumsAsync(1, true, null, 10);
-                console.log('Fetched albums data:', albumsData);
-    
-                // Extract the pageItems array from the fetched data
-                const { pageItems } = albumsData;
-    
-                // Update state with fetched albums
-                setAlbums(pageItems);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                setError(error.message); // Update state with error message
-            }
+        fetchData();
+    }, [pageNr]);
+
+    const fetchData = async () => {
+        try {
+            const musicGroupsData = await service.readMusicGroupsAsync(pageNr, true, searchTerm, itemsPerPage);
+            setMusicGroups(musicGroupsData.pageItems);
+            setTotalItems(musicGroupsData.dbItemsCount);
+        } catch (error) {
+            setError(error.message);
         }
-    
-        fetchData(); // Call fetchData function when component mounts
-    }, []);
-    
+    };
+
+    const handleSearch = () => {
+        setPageNr(0);
+        fetchData();
+    };
+
+    const handleNext = () => {
+        setPageNr(prevPageNr => prevPageNr + 1);
+    };
+
+    const handlePrev = () => {
+        setPageNr(prevPageNr => Math.max(prevPageNr - 1, 0));
+    };
+
+    const getMatchingText = () => {
+        if (totalItems === 0) {
+            return 'There are no music groups matching the current search term.';
+        } else if (totalItems === 1) {
+            return 'There is 1 music group matching the current search term.';
+        } else {
+            return `There are ${totalItems} music groups matching the current search term.`;
+        }
+    };
+
+    const getTotalPages = () => {
+        return Math.ceil(totalItems / itemsPerPage);
+    };
 
     return (
-        <Container className="px-4 py-4" id="list-of-items">
-            <h2 className="pb-2 border-bottom">List of Music Bands</h2>
+        <Container className="container card">
+            <p>{getMatchingText()}</p>
 
-            <p>Below are some of the world's most famous music bands.</p>
-            <p>The database now contains {albums.length} music groups</p>
+            <form className="d-flex mt-3 mt-lg-0" onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
+                <input
+                    className="form-control me-2"
+                    type="search"
+                    placeholder="Search"
+                    aria-label="Search"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button className="btn btn-outline-success" type="submit">Search</button>
+            </form>
 
-            <div className="row mb-1 text-center">
-                <div className="col-md-8">
-                    <form className="d-flex mt-3 mt-lg-0" role="search">
-                        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-                        <button className="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </div>
+            <div className="button-container">
+                <button id="btnPrev" className="arrow-button" onClick={handlePrev} disabled={pageNr === 0}>&#x1F828;</button>
+                <p id="currentPageNumber" className="PageNumber">Page {pageNr + 1} / {getTotalPages()}</p>
+                <button id="btnNext" className="arrow-button" onClick={handleNext} disabled={pageNr + 1 >= getTotalPages()}>&#x1F82A;</button>
             </div>
 
-            <div className="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
-                <div className="col-md-7 col-lg-10">
-                    <div className="row mb-2 text-center">
-                        <div className="col-md-10 themed-grid-head-col">Group Name</div>
-                        <div className="col-md-2 themed-grid-head-col">
-                            <a href="#add-edit-artist" className="btn btn-success btn-sm m-1" type="button">New</a>
-                        </div>
+            <div className='musicGroupList'>
+                {musicGroups.map(group => (
+                    <div key={group.id} className="row mb-2 text-center">
+                        <a href={`#view-group-${group.id}`}>{group.name}</a>
                     </div>
-                    {Array.isArray(albums) && albums.map(album => (
-    <div key={album.id} className="row mb-2 text-center">
-        <div className="col-md-10 themed-grid-col">
-            <a href={`#view-album-${album.id}`}>{album.name}</a>
-        </div>
-        <div className="col-md-2 themed-grid-col">
-            <a href={`#edit-album-${album.id}`} className="btn btn-secondary btn-sm m-1" type="button">Edit</a>
-
-            <Button type="button" className="btn btn-danger btn-sm m-1" data-bs-toggle="modal" data-bs-target="#dangerModal"
-                data-modal-body={`Should ${album.name} be deleted?`}
-                data-seido-modal-post-data={album.id} data-seido-modal-post-url={`./albums/${album.id}`}>
-                Del
-            </Button>
-        </div>
-    </div>
-))}
-                </div>
+                ))}
             </div>
 
-            <nav aria-label="Standard pagination example">
-                <ul className="pagination">
-                    <li className="page-item">
-                        <a className="page-link" href="#list-of-friends" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li className="page-item"><a className="page-link" href="#list-of-friends">1</a></li>
-                    <li className="page-item"><a className="page-link" href="#list-of-friends">2</a></li>
-                    <li className="page-item"><a className="page-link" href="#list-of-friends">3</a></li>
-                    <li className="page-item">
-                        <a className="page-link" href="#list-of-friends" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            {error && <p className="error">{error}</p>}
         </Container>
     );
 }

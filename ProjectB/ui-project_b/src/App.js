@@ -6,12 +6,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import React from 'react';
 import { NavScrollExample } from './components/BootstrapNav';
-import { ListAlbums } from './components/ListAlbums';
+import { ListMusicGroups } from './components/ListAlbums';
 
 function App() {
   return (
     <>
-    <ListAlbums/>
+    <ListMusicGroups/>
   </>
 
     
