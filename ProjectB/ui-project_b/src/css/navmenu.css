@@ -1,0 +1,11 @@
+
+.displaynavbar {
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0); /* Semi-transparent black background */
+    padding: 0px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 24px;
+    color: black; /* Set text color to white */
+    font-weight: bold; /* Make the text bold */
+    background-color: rgba(255, 255, 255, 0.411); /* Semi-transparent white background for the card */
+}

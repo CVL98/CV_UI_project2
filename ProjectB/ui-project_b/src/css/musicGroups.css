@@ -28,7 +28,7 @@
     margin: 0;
 }
 
-.container {
+.displaycontainer {
     text-align: center;
     background-color: rgba(0, 0, 0, 0); /* Semi-transparent black background */
     padding: 0px;
@@ -40,20 +40,12 @@
     font-weight: bold; /* Make the text bold */
 }
 
-.card {
+.displaycard {
     background-color: rgba(255, 255, 255, 0.411); /* Semi-transparent white background for the card */
     border-radius: 10px; /* Rounded corners for the card */
     padding: 20px; /* Add padding to create space inside the card */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a shadow effect */
-    margin: 5% auto; /* Center the card vertically and horizontally */
-    max-width: 500px; /* Set maximum width for the card */
+    margin: 3% auto; /* Center the card vertically and horizontally */
+    max-width: 500px !important; /* Set maximum width for the card */
     min-height: 600px; /* Set height to 80% of the viewport height */
-}
-
-.container.card {
-    flex: 1;
-}
-
-.musicGroupList{
-    
 }

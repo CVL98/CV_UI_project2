@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import musicService from '../services/musicService';
-import '../css/musicGroups.css';
 import {Link} from "react-router-dom";
 
 const apiBaseUrl = 'https://appmusicwebapinet8.azurewebsites.net/api';
@@ -58,7 +57,7 @@ export function Musicalbums() {
     };
 
     return (
-        <Container className="container card">
+        <Container className="displaycontainer displaycard">
             <p>{getMatchingText()}</p>
 
             <form className="d-flex mt-3 mt-lg-0" onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>

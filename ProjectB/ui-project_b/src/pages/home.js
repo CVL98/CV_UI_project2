@@ -1,13 +1,12 @@
 import React from 'react';
 import Container from 'react-bootstrap/Container';
-import '../css/musicGroups.css';
 
 
 
 export default function Home() {
 
     return (
-        <Container className="container card">
+        <Container className="displaycontainer displaycard">
            <div>
             <p>HOLABANDOLA</p>
             </div> 

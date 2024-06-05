@@ -1,4 +1,6 @@
 import './App.css';
+
+import './css/musicGroups.css';
 import { BrowserRouter } from 'react-router-dom';
 
 import React from 'react';
