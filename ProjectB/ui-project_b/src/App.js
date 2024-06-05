@@ -1,20 +1,16 @@
-import logo from './logo.svg';
-// index.js or App.js
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-
 import './App.css';
+import { BrowserRouter } from 'react-router-dom';
+
 import React from 'react';
-import { NavScrollExample } from './components/BootstrapNav';
-import { ListMusicGroups } from './components/ListAlbums';
+import Header from './components/header';
+import { AppRouter } from './router/approuter';
 
 function App() {
   return (
-    <>
-    <ListMusicGroups/>
-  </>
-
-    
+    <BrowserRouter>
+      <Header/>
+      <AppRouter/>
+    </BrowserRouter>
   );
 }
 

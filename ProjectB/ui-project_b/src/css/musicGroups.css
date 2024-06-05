@@ -34,7 +34,7 @@
     padding: 0px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    
+    list-style-type: ''; /* Not sure what you intended here, but it's unrelated to background color */
     font-size: 24px;
     color: black; /* Set text color to white */
     font-weight: bold; /* Make the text bold */
