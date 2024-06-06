@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import musicService from '../services/musicService';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const apiBaseUrl = 'https://appmusicwebapinet8.azurewebsites.net/api';
 const service = new musicService(apiBaseUrl);
@@ -21,7 +21,7 @@ export function Musicalbums() {
 
     const fetchData = async () => {
         try {
-            const musicGroupsData = await service.readMusicGroupsAsync(pageNr, true, searchTerm, itemsPerPage);
+            const musicGroupsData = await service.readMusicGroupsAsync(pageNr, false, searchTerm, itemsPerPage);
             setMusicGroups(musicGroupsData.pageItems);
             setTotalItems(musicGroupsData.dbItemsCount);
         } catch (error) {
@@ -80,8 +80,8 @@ export function Musicalbums() {
 
             <div className='musicGroupList'>
                 {musicGroups.map(group => (
-                    <div key={group.id} className="row mb-2 text-center">
-                        <a href={`#view-group-${group.id}`}>{group.name}</a>
+                    <div key={group.musicGroupId} className="row mb-2 text-center">
+                        <Link to={`/music/details/${group.musicGroupId}`}>{group.name}</Link>
                     </div>
                 ))}
             </div>
