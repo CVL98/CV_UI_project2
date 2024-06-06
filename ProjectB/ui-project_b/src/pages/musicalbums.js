@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const apiBaseUrl = 'https://appmusicwebapinet8.azurewebsites.net/api';
 const service = new musicService(apiBaseUrl);
 
-export function Musicalbums() {
+export default function Musicalbums() {
     const [musicGroups, setMusicGroups] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [pageNr, setPageNr] = useState(0);
