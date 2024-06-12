@@ -8,6 +8,13 @@ import musicService from '../services/musicService';
 const apiBaseUrl = 'https://appmusicwebapinet8.azurewebsites.net/api';
 const service = new musicService(apiBaseUrl);
 
+const genres = [
+    { id: 0, name: 'Rock' },
+    { id: 1, name: 'Blues' },
+    { id: 2, name: 'Jazz' },
+    { id: 3, name: 'Metal' }
+];
+
 export default function EditGroupDetails() {
     const { musicGroupId } = useParams();
     const [groupDetails, setGroupDetails] = useState(null);
@@ -21,7 +28,7 @@ export default function EditGroupDetails() {
                 setGroupDetails(group);
                 setEditedDetails({
                     name: group.name,
-                    genre: group.strGenre,
+                    genre: group.genre, // Ensure you use 'genre' here, not 'strGenre'
                     establishedYear: group.establishedYear
                 });
             } catch (error) {
@@ -44,14 +51,11 @@ export default function EditGroupDetails() {
         e.preventDefault();
         if (e.currentTarget.checkValidity()) {
             try {
-                const _service = new musicService(`https://appmusicwebapinet8.azurewebsites.net/api`);
-                let nGroup = await _service.readMusicGroupDtoAsync(musicGroupId);
+                let nGroup = await service.readMusicGroupDtoAsync(musicGroupId);
                 nGroup.name = editedDetails.name;
                 nGroup.genre = parseInt(editedDetails.genre);
                 nGroup.establishedYear = parseInt(editedDetails.establishedYear);
-                console.log(nGroup);
-                const updatedData = await _service.updateMusicGroupAsync(musicGroupId, nGroup);
-                console.log(updatedData);
+                const updatedData = await service.updateMusicGroupAsync(musicGroupId, nGroup);
                 setGroupDetails(updatedData);
                 alert('Changes saved successfully');
             } catch (error) {
@@ -80,26 +84,50 @@ export default function EditGroupDetails() {
                         <form onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <label htmlFor="name" className="form-label">Name:</label>
-                                <input type="text" className="form-control" id="name" name="name" value={editedDetails.name || ''} onChange={handleInputChange} />
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="name"
+                                    name="name"
+                                    value={editedDetails.name || ''}
+                                    onChange={handleInputChange}
+                                />
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="genre" className="form-label">Genre:</label>
-                                <input type="text" className="form-control" id="genre" name="genre" value={editedDetails.genre || ''} onChange={handleInputChange} />
+                                <select
+                                    className="form-control"
+                                    id="genre"
+                                    name="genre"
+                                    value={editedDetails.genre || ''}
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="">Select a genre</option>
+                                    {genres.map(genre => (
+                                        <option key={genre.id} value={genre.id}>{genre.name}</option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="establishedYear" className="form-label">Established Year:</label>
-                                <input type="text" className="form-control" id="establishedYear" name="establishedYear" value={editedDetails.establishedYear || ''} onChange={handleInputChange} />
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="establishedYear"
+                                    name="establishedYear"
+                                    value={editedDetails.establishedYear || ''}
+                                    onChange={handleInputChange}
+                                />
                             </div>
                             <button type="submit" className="btn btn-primary">Save Changes</button>
                         </form>
                     </Container>
                 </Col>
                 <Col md={6}>
-                    {/* Display group details on the right side */}
                     <Container className="displaycontainer displaycard">
                         <h2>Group Details</h2>
                         <p>Name: {groupDetails.name}</p>
-                        <p>Genre: {groupDetails.strGenre}</p>
+                        <p>Genre: {genres.find(g => g.id === groupDetails.genre)?.name || 'Unknown'}</p>
                         <p>Established Year: {groupDetails.establishedYear}</p>
                     </Container>
                 </Col>
